@@ -1,0 +1,32 @@
+# ignore build folders
+.gradle
+bin
+build
+target
+out
+classes
+
+# ignore .DS_Store file
+*.DS_Store
+
+# ignore eclipse project files
+.classpath
+.project
+.settings
+
+# ignore idea project files
+.idea
+*.iml
+*.ipr
+*.iws
+
+# ignore project runtime files
+logs
+
+# ekmc files
+client-reg.bin
+keycache.kmc
+ekmc
+
+mockserver*
+META-INF
