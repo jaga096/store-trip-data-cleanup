@@ -10,7 +10,9 @@ import org.apache.spark.sql.SparkSession
   */
 object StoreTripDataCleanupApp {
 
-
+  val defaultStoreID: String = "000"
+  val storeIdFilterRegExp: String = "[^0-9]+"
+  val emptyStr: String = ""
   val conf: Config = ConfigFactory.load()
   val sourceKeyspace: String = conf.getString("guestengage.keyspace")
   val SourceTable: String = conf.getString("guestengage.source.table")
@@ -38,7 +40,7 @@ object StoreTripDataCleanupApp {
       row.getString(0)
       ,row.getString(1)
       ,row.getString(2)
-      ,row.getString(3).replaceAll("[^0-9]+","")
+      ,strFilter(row.getString(3))
     )).saveToCassandra(sourceKeyspace,SourceTable)
 
     logger.info("Total number of records will be deleted ------>" + alphaNumericStoreIdDf.count())
@@ -51,4 +53,14 @@ object StoreTripDataCleanupApp {
     )).deleteFromCassandra(sourceKeyspace, SourceTable)
 
   }
+
+  def strFilter(alphanumStoreId:String): String = {
+    val storeId = alphanumStoreId.replaceAll(storeIdFilterRegExp,emptyStr)
+
+    if(storeId.equals(""))
+      return defaultStoreID
+
+    storeId
+  }
+
 }
